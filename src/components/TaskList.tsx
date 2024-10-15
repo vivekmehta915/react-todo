@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
-import { useTodoContext } from './TodoContext';
+import { AiOutlineClose } from 'react-icons/ai'; // Importing the close icon
+import { useTodoContext } from './TodoContext'; // Importing the TodoContext for state management
 
+// TaskList component for displaying the list of tasks
 const TaskList = () => {
-    const { state, dispatch } = useTodoContext();
-    const [hoveredTodo, setHoveredTodo] = useState<number | null>(null);
+    const { state, dispatch } = useTodoContext(); // Accessing state and dispatch from the context
 
+    // Filter todos based on the selected filter and search query
     const filteredTodos = state.todos.filter(todo => {
-        if (state.filter === 'completed') return todo.completed;
-        if (state.filter === 'incomplete') return !todo.completed;
+        if (state.filter === 'completed') return todo.completed; // Filter for completed tasks
+        if (state.filter === 'incomplete') return !todo.completed; // Filter for incomplete tasks
         return true;
     }).filter(todo => todo.text.toLowerCase().includes(state.searchQuery.toLowerCase())) // Filter by search query
-        .reverse();
+        .reverse(); //Reversing the orders of the added task
 
     return (
         <div>
@@ -20,8 +20,6 @@ const TaskList = () => {
                     key={todo.id}
                     className={`flex justify-between items-center p-2 mb-2 border-2 border-gray-300 rounded ${todo.completed ? 'border-task-border-when-checked bg-task-bg-when-checked' : ''
                         }`}
-                    onMouseEnter={() => setHoveredTodo(todo.id)}
-                    onMouseLeave={() => setHoveredTodo(null)}
                 >
                     <div className="flex items-center flex-1">
                         <div className="relative">
@@ -45,14 +43,14 @@ const TaskList = () => {
                         </div>
                         <span
                             className={`mx-2 cursor-pointer`}
-                            onClick={() => dispatch({ type: 'TOGGLE_TODO', payload: todo.id })}
+                            onClick={() => dispatch({ type: 'TOGGLE_TODO', payload: todo.id })} // Toggling task for marking as completed
                         >
-                            {todo.text}
+                            {todo.text} {/* Display the task text */}
                         </span>
                     </div>
                     <AiOutlineClose
                         className={`text-gray-500 cursor-pointer visible`}
-                        onClick={() => dispatch({ type: 'DELETE_TODO', payload: todo.id })}
+                        onClick={() => dispatch({ type: 'DELETE_TODO', payload: todo.id })} // Delete task on close icon click
                     />
                 </div>
             ))}
